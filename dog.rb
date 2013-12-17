@@ -44,7 +44,7 @@ class Dog
  	end
 
  	def update
- 		self.db.query(
+ 		results = self.db.query(
  			"UPDATE dogs
  			SET name = '#{self.name}', color = '#{self.color}'
  			WHERE id = '#{self.id}'")
@@ -54,10 +54,38 @@ class Dog
  		self.db.query("DELETE FROM dogs
  			WHERE id = '#{self.id}' ")
  	end
-end
 
-dog = Dog.find(3)
-dog.delete
+ 	def saved?
+ 		results = self.db.query("SELECT * FROM dogs 
+ 			WHERE id = '#{self.id}' AND name = '#{self.name}' AND color ='#{self.color}'
+ 			")
+ 		if results.first.nil?
+ 			return false
+ 		else
+ 			return true
+ 		end
+ 	end
+
+ 	def save! 
+ 		if self.saved? == true
+ 			puts "Saved!"
+ 		elsif
+ 			self.id.nil? 
+ 				self.insert(self.id, self.name, self.color)
+ 		else
+ 			self.update
+ 		end
+ 	end
+
+ 	def ==(other_dog)
+ 		self.id == other_dog.id
+ 	end
+ 
+ end
+
+dog = Dog.find(2)
+dog.name = "john"
+dog.save!
 
  # color, name, id x
   # db x
@@ -69,10 +97,10 @@ dog.delete
  
   # refactorings?
   # new_from_db? x
-  # saved?
-  # save! (a smart method that knows the right thing to do)
-  # unsaved?
-  # mark_saved!
+  # saved? x
+  # save! (a smart method that knows the right thing to do) x
+  # unsaved? x
+  # mark_saved! x
   # ==
   # inspect
   # reload
