@@ -20,8 +20,7 @@ class Dog
 	end
 
 	def self.find_by_name(name)
-		results = db.query ("SELECT * FROM dogs WHERE name = '#{name}'")
-		
+		results = db.query ("SELECT * FROM dogs WHERE name = '#{name}'")		
 	end
 	
 	def self.find(id)
@@ -80,13 +79,30 @@ class Dog
  	def ==(other_dog)
  		self.id == other_dog.id
  	end
- 
+
+	def reload
+		result = self.db.query("SELECT * 
+			FROM dogs 
+			WHERE id = '#{self.id}'
+			")
+		if self.name != result.first['name']
+			self.name = result.first['name']
+		else
+			nil
+		end
+		if self.name!= result.first['color']
+			self.color = result.first['color']
+		else
+			nil
+		end
+	end
  end
 
-dog = Dog.find(2)
-dog.name = "john"
-dog.save!
-
+dog = Dog.find(4)
+dog.name = "Fluffy"
+p dog
+dog.reload
+p dog
  # color, name, id x
   # db x
   # find _by_att x
@@ -103,5 +119,5 @@ dog.save!
   # mark_saved! x
   # ==
   # inspect
-  # reload
-  # attributes
+  # reload x
+  # attributes - ?
